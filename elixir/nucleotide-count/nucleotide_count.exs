@@ -1,6 +1,4 @@
 defmodule NucleotideCount do
-  @nucleotides [?A, ?C, ?G, ?T]
-
   @doc """
   Counts individual nucleotides in a DNA strand.
 
@@ -27,6 +25,6 @@ defmodule NucleotideCount do
   """
   @spec histogram([char]) :: map
   def histogram(strand) do
-    map = %{?A => count(strand, ?A) , ?T => count(strand, ?T), ?C => count(strand, ?C), ?G => count(strand, ?G)}
+    %{?A => count(strand, ?A) , ?T => count(strand, ?T), ?C => count(strand, ?C), ?G => count(strand, ?G)}
   end
 end
