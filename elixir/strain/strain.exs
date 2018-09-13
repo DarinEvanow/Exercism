@@ -7,7 +7,7 @@ defmodule Strain do
   """
   @spec keep(list :: list(any), fun :: (any -> boolean)) :: list(any)
   def keep(list, fun) do
-    _strain(list, &(fun.(&1)))
+    _strain(list, &fun.(&1))
   end
 
   @doc """
@@ -22,11 +22,12 @@ defmodule Strain do
   end
 
   defp _strain([], _fun), do: []
-  defp _strain([head|tail], fun) do
+
+  defp _strain([head | tail], fun) do
     if fun.(head) do
       [head | _strain(tail, fun)]
     else
-      _strain tail, fun
+      _strain(tail, fun)
     end
   end
 end
