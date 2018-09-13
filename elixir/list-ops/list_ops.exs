@@ -8,7 +8,7 @@ defmodule ListOps do
 
   @spec count(list) :: non_neg_integer
   def count([]) do 0 end
-  def count([h|t]) do 1 + count(t) end
+  def count([_|t]) do 1 + count(t) end
 
   @spec reverse(list) :: list
   def reverse(l) do do_reverse(l, []) end
@@ -16,18 +16,18 @@ defmodule ListOps do
   defp do_reverse([h|t], acc) do do_reverse(t, [h|acc]) end
 
   @spec map(list, (any -> any)) :: list
-  def map([], f) do [] end
+  def map([], _) do [] end
   def map([h|t], f) do [f.(h) | map(t, f)] end
 
   @spec filter(list, (any -> as_boolean(term))) :: list
-  def filter([], f) do [] end
+  def filter([], _) do [] end
   def filter([h|t], f) do
     if (f.(h)) do [h|filter(t, f)] else filter(t, f) end
   end
 
   @type acc :: any
   @spec reduce(list, acc, (any, acc -> acc)) :: acc
-  def reduce([], acc, f) do acc end
+  def reduce([], acc, _) do acc end
   def reduce([h|t], acc, f) do reduce(t, f.(h, acc), f) end
 
   @spec append(list, list) :: list
