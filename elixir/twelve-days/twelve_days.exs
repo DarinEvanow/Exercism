@@ -4,6 +4,7 @@ defmodule TwelveDays do
   all gifts for previous days in the same line.
   """
   @spec verse(number :: integer) :: String.t()
+  def verse(1) do "On the first day of Christmas my true love gave to me, a Partridge in a Pear Tree." end
   def verse(number) do
     number_word = %{
       1 => "first",
@@ -21,17 +22,23 @@ defmodule TwelveDays do
     }
 
     gifts_list = [
-      "a Partridge in a Pear Tree",
+      "and a Partridge in a Pear Tree",
       "two Turtle Doves",
       "three French Hens",
       "four Calling Birds",
       "five Gold Rings",
-      "six Geese-a-Laying"
+      "six Geese-a-Laying",
+      "seven Swans-a-Swimming",
+      "eight Maids-a-Milking",
+      "nine Ladies Dancing",
+      "ten Lords-a-Leaping",
+      "eleven Pipers Piping",
+      "twelve Drummers Drumming"
     ]
 
     gifts_string = gifts_list
+     |> Enum.take(number)
      |> Enum.reverse
-     |> Enum.take number
      |> Enum.reduce("", fn value, acc -> acc <> ", " <> value end)
 
     "On the #{number_word[number]} day of Christmas my true love gave to me#{gifts_string}."
@@ -43,6 +50,8 @@ defmodule TwelveDays do
   """
   @spec verses(starting_verse :: integer, ending_verse :: integer) :: String.t()
   def verses(starting_verse, ending_verse) do
+    results = for i <- starting_verse..ending_verse, do: verse(i)
+    Enum.join(results, "\n")
   end
 
   @doc """
@@ -50,5 +59,6 @@ defmodule TwelveDays do
   """
   @spec sing() :: String.t()
   def sing do
+    verses(1, 12)
   end
 end
