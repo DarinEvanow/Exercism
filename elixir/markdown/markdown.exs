@@ -33,9 +33,17 @@ defmodule Markdown do
     {to_string(String.length(h)), Enum.join(t, " ")}
   end
 
+  # Refactor: Piped out functions, and broke string concatenation into enclose_with_last_tag
   defp parse_list_md_level(l) do
-    t = String.split(String.trim_leading(l, "* "))
-    "<li>" <> join_words_with_tags(t) <> "</li>"
+    String.trim_leading(l, "* ")
+    |> String.split
+    |> join_words_with_tags
+    |> enclose_with_list_tag
+  end
+
+  # Refactor: Additionally added helper method
+  defp enclose_with_list_tag(t) do
+    "<li>" <> t <> "</li>"
   end
 
   defp enclose_with_header_tag({hl, htl}) do
