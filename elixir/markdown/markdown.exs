@@ -11,7 +11,7 @@ defmodule Markdown do
     "<h1>Header!</h1><ul><li><em>Bold Item</em></li><li><i>Italic Item</i></li></ul>"
   """
   # Refactor: Spread out nested function calls into pipes, changed map and join into a map_join,
-  # call new versions of the process function, and replace patch with replace_md
+  # call new versions of the process function, and replace patch with replace_markdown
   @spec parse(String.t) :: String.t
   def parse(markdown) do
     markdown
