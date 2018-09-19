@@ -12,7 +12,7 @@ defmodule Markdown do
   """
   # Refactor: Spread out nested function calls into pipes, changed map and join into a map_join,
   # call new versions of the process function, and replace patch with replace_md
-  @spec parse(String.t()) :: String.t()
+  @spec parse(String.t) :: String.t
   def parse(markdown) do
     markdown
     |> String.split("\n")
@@ -22,18 +22,20 @@ defmodule Markdown do
 
   # Refactor: Created new versions of process function that are called based on the markdown
   # element that begins the line split from the parse function
-  @spec process(String.t()) :: String.t()
+  @spec process(String.t) :: String.t
   defp process(line = "#" <> rest), do: parse_header(line)
   defp process("* " <> rest), do: "<li>#{rest}</li>"
   defp process(line), do: "<p>#{line}</p>"
 
   # Refactor: Created new function to parse the header type of markdown
+  @spec process(String.t) :: String.t
   defp parse_header(header) do
     [ h | t ] = String.split(header, " ", parts: 2)
     "<h#{String.length(h)}>#{t}</h#{String.length(h)}>"
   end
 
   # Refactor: Created easier regex to help parse out the different markdown types
+  @spec process(String.t) :: String.t
   defp replace_markdown(markdown) do
     markdown
     |> String.replace(~r/__(.*?)__/, "<strong>\\1</strong>")
