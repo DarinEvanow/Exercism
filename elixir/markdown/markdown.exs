@@ -12,8 +12,9 @@ defmodule Markdown do
   """
   # Refactor: Spread out nested function calls into pipes
   @spec parse(String.t()) :: String.t()
-  def parse(m) do
-    String.split(m, "\n")
+  def parse(markdown) do
+    markdown
+    |> String.split("\n")
     |> Enum.map(fn t -> process(t) end)
     |> Enum.join
     |> patch
@@ -28,64 +29,64 @@ defmodule Markdown do
     end
   end
 
-  defp parse_header_md_level(hwt) do
-    [h | t] = String.split(hwt)
+  defp parse_header_md_level(header) do
+    [h | t] = String.split(header)
     {to_string(String.length(h)), Enum.join(t, " ")}
   end
 
   # Refactor: Piped out functions, and broke string concatenation into enclose_with_last_tag
-  defp parse_list_md_level(l) do
-    String.trim_leading(l, "* ")
+  defp parse_list_md_level(list) do
+    String.trim_leading(list, "* ")
     |> String.split
     |> join_words_with_tags
     |> enclose_with_list_tag
   end
 
   # Refactor: Additionally added helper method
-  defp enclose_with_list_tag(t) do
-    "<li>#{t}</li>"
+  defp enclose_with_list_tag(text) do
+    "<li>#{text}</li>"
   end
 
+  # Refactor: combination of string interpolation and concatenation to increase readability
   defp enclose_with_header_tag({hl, htl}) do
-    "<h#{hl}>#{htl}</h#{hl}>"
+    "<h#{hl}>" <> "#{htl}" <> "</h#{hl}>"
   end
 
-  defp enclose_with_paragraph_tag(t) do
-    "<p>#{join_words_with_tags(t)}</p>"
+  defp enclose_with_paragraph_tag(text) do
+    "<p>#{join_words_with_tags(text)}</p>"
   end
 
-  defp join_words_with_tags(t) do
-    Enum.map(t, fn w -> replace_md_with_tag(w) end)
+  defp join_words_with_tags(text) do
+    Enum.map(text, fn word -> replace_md_with_tag(word) end)
     |> Enum.join(" ")
   end
 
-  defp replace_md_with_tag(w) do
-    w
+  defp replace_md_with_tag(markdown) do
+    markdown
     |> replace_prefix_md
     |> replace_suffix_md
   end
 
-  defp replace_prefix_md(w) do
+  defp replace_prefix_md(word) do
     cond do
-      w =~ ~r/^#{"__"}{1}/ -> String.replace(w, ~r/^#{"__"}{1}/, "<strong>", global: false)
-      w =~ ~r/^[#{"_"}{1}][^#{"_"}+]/ -> String.replace(w, ~r/_/, "<em>", global: false)
-      true -> w
+      word =~ ~r/^#{"__"}{1}/ -> String.replace(word, ~r/^#{"__"}{1}/, "<strong>", global: false)
+      word =~ ~r/^[#{"_"}{1}][^#{"_"}+]/ -> String.replace(word, ~r/_/, "<em>", global: false)
+      true -> word
     end
   end
 
-  defp replace_suffix_md(w) do
+  defp replace_suffix_md(word) do
     cond do
-      w =~ ~r/#{"__"}{1}$/ -> String.replace(w, ~r/#{"__"}{1}$/, "</strong>")
-      w =~ ~r/[^#{"_"}{1}]/ -> String.replace(w, ~r/_/, "</em>")
-      true -> w
+      word =~ ~r/#{"__"}{1}$/ -> String.replace(word, ~r/#{"__"}{1}$/, "</strong>")
+      word =~ ~r/[^#{"_"}{1}]/ -> String.replace(word, ~r/_/, "</em>")
+      true -> word
     end
   end
 
-  defp patch(l) do
-    String.replace_suffix(
-      String.replace(l, "<li>", "<ul>" <> "<li>", global: false),
-      "</li>",
-      "</li>" <> "</ul>"
-    )
+  # Refactor: used piping and removed unneeded concatenation operators
+  defp patch(markdown) do
+    markdown
+    |> String.replace("<li>", "<ul><li>", global: false)
+    |> String.replace_suffix("</li>", "</li></ul>")
   end
 end
