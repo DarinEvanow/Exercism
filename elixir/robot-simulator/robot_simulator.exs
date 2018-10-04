@@ -7,25 +7,20 @@ defmodule RobotSimulator do
   @doc """
   Create a Robot Simulator given an initial direction and position.
 
-
   Valid directions are: `:north`, `:east`, `:south`, `:west`
   """
   @spec create(direction :: atom, position :: {integer, integer}) :: any
-  # Used to create our Robot with default values
   def create, do: create(:north, {0, 0})
 
-  # Check that direction is valid
   def create(direction, _position) when direction not in @valid_direction do
     {:error, "invalid direction"}
   end
 
-  # Create our Robot if the direction check above passes, and x and y are both integers
   def create(direction, {x, y} = position) when is_integer(x) and is_integer(y) do
     {:ok, robot} = Agent.start_link(fn -> %{direction: direction, position: position} end)
     robot
   end
 
-  # If position is not a 2-tuple consisting of integers, throw an error
   def create(_direction, _position) do
     {:error, "invalid position"}
   end
